@@ -1,0 +1,97 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"log"
+	"os"
+	"strconv"
+	"strings"
+)
+
+func RemoveIndex(s []int, index int) []int {
+	ret := make([]int, 0)
+	ret = append(ret, s[:index]...)
+	return append(ret, s[index+1:]...)
+}
+
+func mytest(ints []int) bool {
+	var increasing bool
+	dif := ints[1] - ints[0]
+	if dif == 0 {
+		return false
+	}
+	if dif > 0 {
+		increasing = true
+	} else {
+		increasing = false
+	}
+	safe := true
+	for i := range ints {
+		if i == 0 {
+			continue
+		}
+		dif := ints[i] - ints[i-1] // pozitiv ha novekvo, negativ ha csokkeno
+		if dif == 0 {
+			safe = false
+			break
+		}
+		if (dif > 0 && !increasing) || (dif < 0 && increasing) {
+			safe = false
+			break
+		}
+		if (increasing && dif > 3) || (!increasing && dif < -3) {
+			safe = false
+			break
+		}
+	}
+	return safe
+}
+
+func scanFile(textfile string) {
+	f, err := os.OpenFile(textfile, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		log.Fatalf("open file error: %v", err)
+		return
+	}
+	defer f.Close()
+	safecount := 0
+	sc := bufio.NewScanner(f)
+	for sc.Scan() {
+		report := strings.Split(sc.Text(), " ")
+		ints := make([]int, len(report))
+		for i, level := range report {
+			ints[i], _ = strconv.Atoi(level)
+		}
+		safe := mytest(ints)
+		if safe {
+			fmt.Println("safe", ints)
+			safecount += 1
+		} else {
+			fmt.Println("notsafe", ints, sc.Err())
+			fmt.Println("but trying")
+			for i := 0; i < len(ints); i++ {
+				newints := RemoveIndex(ints, i)
+				safe := mytest(newints)
+				if safe {
+					fmt.Println("safe", ints)
+					safecount += 1
+					break
+				}
+
+			}
+
+		}
+
+	}
+	fmt.Println(safecount)
+
+	if err := sc.Err(); err != nil {
+		log.Fatalf("scan file error: %v", err)
+		return
+	}
+}
+
+func main() {
+	scanFile("masodik.txt")
+}

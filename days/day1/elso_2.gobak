@@ -1,0 +1,56 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"log"
+	"os"
+)
+
+func scanFile(textfile string) {
+	f, err := os.OpenFile(textfile, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		log.Fatalf("open file error: %v", err)
+		return
+	}
+	defer f.Close()
+	var res int
+	var egy []int
+	var ketto []int
+	res = 0
+	sc := bufio.NewScanner(f)
+	for sc.Scan() {
+		src := sc.Text()
+		var a, b int
+
+		_, err := fmt.Sscanf(src, "%d %d", &a, &b)
+		if err != nil {
+			panic(err)
+		}
+		egy = append(egy, a)
+		ketto = append(ketto, b)
+
+	}
+	var count, diff int
+	for i := 0; i < len(ketto); i++ {
+		count = 0
+		for j := 0; j < len(ketto); j++ {
+			if egy[i] == ketto[j] {
+				count = count + 1
+			}
+		}
+		diff = egy[i] * count
+		res = res + diff
+	}
+	fmt.Println(res)
+
+	if err := sc.Err(); err != nil {
+		log.Fatalf("scan file error: %v", err)
+		return
+	}
+}
+
+func main() {
+	fmt.Println("hello world")
+	scanFile("elso.txt")
+}
