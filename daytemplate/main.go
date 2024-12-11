@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	//"panko/aoc2024/pkg/input"
 )
 
 func main() {
@@ -9,10 +10,10 @@ func main() {
 	fmt.Println("Part 2: ", part2("input.txt"))
 }
 
-func part1(name string) int {
+func part1(filename string) int {
 	return 0
 }
 
-func part2(name string) int {
+func part2(filename string) int {
 	return 0
 }

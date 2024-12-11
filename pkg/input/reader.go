@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-func ReadParagraphs(textfile string) [][]string {
-	lines := ReadLines(textfile)
+func ReadParagraphs(filename string) [][]string {
+	lines := ReadLines(filename)
 
 	res := make([][]string, 0)
 	var parag []string
@@ -23,8 +23,8 @@ func ReadParagraphs(textfile string) [][]string {
 	return res
 }
 
-func ReadLines(textfile string) []string {
-	f, err := os.OpenFile(textfile, os.O_RDONLY, os.ModePerm)
+func ReadLines(filename string) []string {
+	f, err := os.OpenFile(filename, os.O_RDONLY, os.ModePerm)
 	if err != nil {
 		panic(err)
 	}
